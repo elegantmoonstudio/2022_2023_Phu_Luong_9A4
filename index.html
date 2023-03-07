@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,8 +11,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <title>Kỷ Yếu 9A4 Phú Lương 2022 - 2023</title>
 </head>
+
 <body>
     <div class="container">
+        <h4 class="title2">Moon Studio-0904951286</h4>
         <h2 class="title">Kỷ Yếu 9A4 Phú Lương 2022 - 2023</h2>
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
@@ -27,9 +30,12 @@
             </ul>
         </nav>
         <div class="photo_gallery">
-            <div class="column" id="column_0"></div>
-            <div class="column" id="column_1"></div>
-            <div class="column" id="column_2"></div>
+            <div class="column" id="column_0">
+            </div>
+            <div class="column" id="column_1">
+            </div>
+            <div class="column" id="column_2">
+            </div>
         </div>
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
@@ -46,43 +52,31 @@
         </nav>
     </div>
     <script>
-        var dir1 = "images_0/";
-        var dir2 = "images_1/";
-        var dir3 = "images_2/";
-        var index = 0
-        let per_page = 20;
-        let cur_page = 1;
-        let start = 1;
-        let end = per_page;
-        let total_pages = 105;
+        var root = 'https://raw.githubusercontent.com/data2k/2022_2023_Phu_Luong_9A4/main/'
+        var filenames = []
+        var n_total_images = 0
+        let per_page = 10;
+        var cur_page = 1;
+        var start = 0;
+        var end = per_page;
+        let total_pages = 0;
         var t_image = (dir, filename) => `
             <div class="photo">                
-                <img src="${dir + filename}" alt="" loading="lazy">
+                <img src="${dir + filename}" alt="" loading="lazy" onerror="this.onerror=null;this.src='https://moonstudio.site/moonstudio.png';">
                 <div class="subphoto">
-                    <h5 class='filename'>${filename}</h5>
+                    <h5 class='filename'>${filename.split('/')[1]}</h5>
                     <a href="${dir + filename}" download>
                         <i class="fas fa-cloud-download-alt"></i>
                     </a>
                 </div>
             </div>
         `
-        async function get_image(dir, filename) {
-            let myObject = await fetch(dir + filename);
-            if (myObject.status != 404) {
-                document.getElementById('column_0').innerHTML += t_image(dir, filename)
-            }
-        }
-        async function getMultipleText(start, end) {
+        function update(){
+            document.getElementById('page-info-top').innerHTML = cur_page;
+            document.getElementById('page-info-bottom').innerHTML = cur_page;
+            document.getElementById('column_0').innerHTML = '';
             for (var i = start; i < end; i++) {
-                var filename = "img%20(" + i +").jpg"
-                var dir = dir1
-                if (i > 800){
-                    dir = dir2
-                }
-                if (i > 1600){
-                    dir = dir3
-                }
-                await get_image(dir, "img (" + i + ").jpg");
+                document.getElementById('column_0').innerHTML += t_image(root, filenames[i])
             }
         }
         const btn_next_top = document.querySelector('.btn-next-top');
@@ -93,15 +87,11 @@
                 cur_page = total_pages
             }
             start = (cur_page - 1) * per_page;
-            if (start < 1){
-                start = 1
+            if (start < 1) {
+                start = 0
             }
             end = cur_page * per_page;
-            document.getElementById('page-info-top').innerHTML = cur_page;
-            document.getElementById('page-info-bottom').innerHTML = cur_page;
-            // document.getElementById('column_0').innerHTML = '';
-            location.reload()
-            getMultipleText(start, end).then(() => {})
+            update()
         })
         btn_prev_top.addEventListener('click', () => {
             cur_page--;
@@ -109,17 +99,11 @@
                 cur_page = 1
             }
             start = (cur_page - 1) * per_page;
-            if (start < 1){
-                start = 1
+            if (start < 1) {
+                start = 0
             }
             end = cur_page * per_page;
-            temp_content = ''
-            document.getElementById('page-info-top').innerHTML = cur_page;
-            document.getElementById('page-info-bottom').innerHTML = cur_page;
-            // document.getElementById('column_0').innerHTML = '';
-            location.reload()
-
-            getMultipleText(start, end).then(() => {})
+            update()
         })
         const btn_next_bottom = document.querySelector('.btn-next-bottom');
         const btn_prev_bottom = document.querySelector('.btn-prev-bottom');
@@ -129,16 +113,11 @@
                 cur_page = total_pages
             }
             start = (cur_page - 1) * per_page;
-            if (start < 1){
+            if (start < 1) {
                 start = 1
             }
             end = cur_page * per_page;
-            document.getElementById('page-info-top').innerHTML = cur_page;
-            document.getElementById('page-info-bottom').innerHTML = cur_page;
-            // document.getElementById('column_0').innerHTML = '';
-            location.reload()
-
-            getMultipleText(start, end).then(() => {})
+            update()
         })
         btn_prev_bottom.addEventListener('click', () => {
             cur_page--;
@@ -146,22 +125,28 @@
                 cur_page = 1
             }
             start = (cur_page - 1) * per_page;
-            if (start < 1){
+            if (start < 1) {
                 start = 1
             }
             end = cur_page * per_page;
-            temp_content = ''
-            document.getElementById('page-info-top').innerHTML = cur_page;
-            document.getElementById('page-info-bottom').innerHTML = cur_page;
-            // document.getElementById('column_0').innerHTML = '';
-            location.reload()
-
-            getMultipleText(start, end).then(() => {})
+            update()
         })
-        document.getElementById('column_0').innerHTML = ''
-        // location.reload()
-
-        getMultipleText(start, per_page).then(() => {})
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', root + 'data.txt', true);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                document.getElementById('column_0').innerHTML = ''
+                var jsonObj = JSON.parse(xhr.responseText);
+                n_total_images = jsonObj.n_images
+                total_pages = Math.floor(n_total_images/per_page) + Math.floor(n_total_images%per_page)
+                for (var i = 0; i < n_total_images; i++){
+                    filenames.push(jsonObj.filenames[i])
+                }
+                update()
+            }
+        };
+        xhr.send();
     </script>
 </body>
+
 </html>

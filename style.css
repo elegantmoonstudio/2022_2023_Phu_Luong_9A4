@@ -10,6 +10,11 @@
     padding: 40px 0;
     text-align: center;
 }
+
+.title2 {
+    animation: color-animation 0.5s infinite;
+}
+
 .title{
     margin-bottom: 2rem;
 }
@@ -60,5 +65,19 @@
 @media(max-width:768px){
     .photo_gallery{
         flex-direction: column;
+    }
+}
+
+@keyframes color-animation {
+    0% {
+        color: red;
+    }
+
+    50% {
+        color: rgb(0, 153, 255);
+    }
+
+    100% {
+        color: green;
     }
 }
